@@ -29,7 +29,7 @@
 
                 <button
     class="btn btn-light"
-    data-login>
+    data-create>
     + Создать встречу
 </button>
 
@@ -277,7 +277,91 @@
     </div>
 
 
+<!-- ================= CREATE PLAN MODAL ================= -->
 
+<div
+    id="createPlanModal"
+    class="modal">
+
+    <div class="modal-content">
+
+        <button
+            class="modal-close"
+            data-close-create>
+
+            ×
+
+        </button>
+
+        <h2>Создать встречу</h2>
+
+        <form id="createPlanForm">
+
+            <input
+                type="text"
+                id="title"
+                placeholder="Название встречи"
+                required>
+
+            <select id="category" required>
+
+                <option value="">Категория</option>
+
+                <option value="coffee">☕ Кофе</option>
+                <option value="beach">🏖 Пляж</option>
+                <option value="bar">🍺 Бар</option>
+                <option value="restaurant">🍕 Ресторан</option>
+                <option value="sport">⚽ Спорт</option>
+                <option value="bike">🚴 Велосипед</option>
+                <option value="hiking">🥾 Поход</option>
+                <option value="trip">🚗 Поездка</option>
+                <option value="games">🎲 Игры</option>
+                <option value="movie">🎬 Кино</option>
+                <option value="other">✨ Другое</option>
+
+            </select>
+
+            <input
+                type="text"
+                id="city"
+                placeholder="Город"
+                required>
+
+            <input
+                type="text"
+                id="meetingPlace"
+                placeholder="Место встречи">
+
+            <input
+                type="datetime-local"
+                id="meetingAt"
+                required>
+
+            <input
+                type="number"
+                id="maxPeople"
+                min="2"
+                max="50"
+                value="5">
+
+            <textarea
+                id="description"
+                rows="4"
+                placeholder="Описание"></textarea>
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+
+                Создать встречу
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
 
     <!-- ================= FOOTER ================= -->
