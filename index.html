@@ -218,9 +218,77 @@
 
     <!-- ================= LOGIN MODAL ================= -->
 
-    <div
-        id="loginModal"
-        class="modal">
+    <div id="loginModal" class="modal">
+
+    <div class="modal-content auth-modal">
+
+        <button
+            class="modal-close"
+            data-close-login>
+
+            ×
+
+        </button>
+
+        <h2>Добро пожаловать 👋</h2>
+
+        <p>
+            Войдите, чтобы создавать встречи, присоединяться к другим участникам и пользоваться чатом.
+        </p>
+
+        <button
+            id="googleLogin"
+            class="btn btn-primary auth-google">
+
+            Продолжить с Google
+
+        </button>
+
+        <button
+            class="btn btn-light auth-apple"
+            disabled>
+
+            🍎 Apple (скоро)
+
+        </button>
+
+        <div class="auth-divider">
+            <span>или</span>
+        </div>
+
+        <input
+            id="loginEmail"
+            type="email"
+            placeholder="Email">
+
+        <input
+            id="loginPassword"
+            type="password"
+            placeholder="Пароль">
+
+        <button
+            id="loginBtn"
+            class="btn btn-primary">
+
+            Войти
+
+        </button>
+
+        <p class="auth-register">
+
+            Нет аккаунта?
+
+            <a href="#" id="showRegister">
+
+                Зарегистрироваться
+
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
 
         <div class="modal-content">
 
