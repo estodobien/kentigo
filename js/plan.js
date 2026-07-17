@@ -97,6 +97,7 @@ function renderPlan(plan) {
 
     updateParticipantsCount();
     updateParticipantsList();
+    updateOwnerActions();
     document.getElementById("planCreator").textContent =
     plan.creator?.name || "Без имени";
 
@@ -256,5 +257,26 @@ async function updateParticipantsList() {
             👤 ${member.profiles?.name || "Без имени"}
         </div>
     `).join("");
+
+}
+async function updateOwnerActions() {
+
+    const {
+        data: { user }
+    } = await db.auth.getUser();
+
+    const actions = document.getElementById("ownerActions");
+
+    if (!actions) return;
+
+    if (user && user.id === currentPlan.creator_id) {
+
+        actions.style.display = "block";
+
+    } else {
+
+        actions.style.display = "none";
+
+    }
 
 }
