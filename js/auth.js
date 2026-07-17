@@ -7,18 +7,25 @@ const googleLoginBtn = document.getElementById("googleLogin");
 if (googleLoginBtn) {
     googleLoginBtn.addEventListener("click", async () => {
 
-        const { error } = await supabase.auth.signInWithOAuth({
+        try {
 
-            provider: "google",
+            const { error } = await db.auth.signInWithOAuth({
 
-            options: {
-                redirectTo: "https://kentigo.netlify.app/login.html"
+                provider: "google",
+
+                options: {
+                    redirectTo: `${window.location.origin}/login.html`
+                }
+
+            });
+
+            if (error) {
+                alert(error.message);
             }
 
-        });
-
-        if (error) {
-            alert(error.message);
+        } catch (err) {
+            console.error(err);
+            alert(err.message);
         }
 
     });
@@ -34,41 +41,52 @@ if (registerBtn) {
 
     registerBtn.addEventListener("click", async () => {
 
-        const name = document.getElementById("registerName").value.trim();
+        try {
 
-        const email = document.getElementById("registerEmail").value.trim();
+            const name = document.getElementById("registerName").value.trim();
+            const email = document.getElementById("registerEmail").value.trim();
+            const password = document.getElementById("registerPassword").value;
 
-        const password = document.getElementById("registerPassword").value;
+            if (!name || !email || !password) {
+                alert("Заполните все поля");
+                return;
+            }
 
-        if (!name || !email || !password) {
-            alert("Заполните все поля");
-            return;
+            const { data, error } = await db.auth.signUp({
+
+                email,
+                password
+
+            });
+
+            if (error) {
+                alert(error.message);
+                return;
+            }
+
+            if (data.user) {
+
+                const { error: profileError } = await db
+                    .from("profiles")
+                    .update({
+                        name: name
+                    })
+                    .eq("id", data.user.id);
+
+                if (profileError) {
+                    console.error(profileError);
+                }
+
+            }
+
+            alert("Регистрация успешна. Проверьте почту.");
+
+        } catch (err) {
+
+            console.error(err);
+            alert(err.message);
+
         }
-
-        const { data, error } = await supabase.auth.signUp({
-
-            email,
-            password
-
-        });
-
-        if (error) {
-            alert(error.message);
-            return;
-        }
-
-        if (data.user) {
-
-            await supabase
-                .from("profiles")
-                .update({
-                    name: name
-                })
-                .eq("id", data.user.id);
-
-        }
-
-        alert("Регистрация успешна. Проверьте почту.");
 
     });
 
@@ -84,26 +102,31 @@ if (loginBtn) {
 
     loginBtn.addEventListener("click", async () => {
 
-        const email = document.getElementById("loginEmail").value.trim();
+        try {
 
-        const password = document.getElementById("loginPassword").value;
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value;
 
-        const { error } = await supabase.auth.signInWithPassword({
+            const { error } = await db.auth.signInWithPassword({
 
-            email,
-            password
+                email,
+                password
 
-        });
+            });
 
-        if (error) {
+            if (error) {
+                alert(error.message);
+                return;
+            }
 
-            alert(error.message);
+            window.location.href = "plans.html";
 
-            return;
+        } catch (err) {
+
+            console.error(err);
+            alert(err.message);
 
         }
-
-        window.location.href = "plans.html";
 
     });
 
@@ -115,14 +138,20 @@ if (loginBtn) {
 
 (async () => {
 
-    const {
+    try {
 
-        data: { session }
+        const {
+            data: { session }
+        } = await db.auth.getSession();
 
-    } = await supabase.auth.getSession();
+        if (!session) return;
 
-    if (!session) return;
+        window.location.href = "plans.html";
 
-    window.location.href = "plans.html";
+    } catch (err) {
+
+        console.error(err);
+
+    }
 
 })();

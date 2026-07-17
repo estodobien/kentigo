@@ -1,2 +1,2 @@
 console.log("Kentigo started");
-console.log(supabase);
+console.log(db);
