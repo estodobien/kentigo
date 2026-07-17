@@ -52,11 +52,14 @@ async function loadPlan() {
     }
 
     renderPlan(data);
+    console.log(data);
 
 }
 function renderPlan(plan) {
 
-    document.getElementById("planCategory").textContent =
+    const date = new Date(plan.meeting_at);
+
+    document.getElementById("categoryBadge").textContent =
         categories[plan.category] ?? "✨ Другое";
 
     document.getElementById("planTitle").textContent =
@@ -71,20 +74,16 @@ function renderPlan(plan) {
     document.getElementById("planPlace").textContent =
         "📌 " + (plan.meeting_place || "Место уточняется");
 
-    const date = new Date(plan.meeting_at);
-
     document.getElementById("planDate").textContent =
         "📅 " + date.toLocaleDateString("ru-RU");
 
     document.getElementById("planTime").textContent =
         "🕒 " + date.toLocaleTimeString("ru-RU", {
-
             hour: "2-digit",
             minute: "2-digit"
-
         });
 
-    document.getElementById("planMembers").textContent =
+    document.getElementById("participantsCount").textContent =
         `0 / ${plan.max_people} участников`;
 
 }
