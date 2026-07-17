@@ -16,7 +16,7 @@ const categories = {
     movie: "🎬 Кино",
     other: "✨ Другое"
 };
-
+let currentPlan = null;
 document.addEventListener("DOMContentLoaded", loadPlan);
 
 async function loadPlan() {
@@ -51,8 +51,13 @@ async function loadPlan() {
 
     }
 
-    renderPlan(data);
-    console.log(data);
+    currentPlan = data;
+
+renderPlan(data);
+
+updateJoinButton();
+
+console.log(data);
 
 }
 function renderPlan(plan) {
@@ -85,5 +90,97 @@ function renderPlan(plan) {
 
     document.getElementById("participantsCount").textContent =
         `0 / ${plan.max_people} участников`;
+
+}
+// ==========================================
+// ПРИСОЕДИНЕНИЕ К ВСТРЕЧЕ
+// ==========================================
+
+async function updateJoinButton() {
+
+    const button = document.getElementById("joinPlanBtn");
+
+    if (!button) return;
+
+    const {
+        data: { user }
+    } = await db.auth.getUser();
+
+    if (!user) {
+
+        button.textContent = "Войти для участия";
+        return;
+
+    }
+
+    const { data } = await db
+        .from("plan_members")
+        .select("id")
+        .eq("plan_id", currentPlan.id)
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (data) {
+
+        button.textContent = "Покинуть встречу";
+
+    } else {
+
+        button.textContent = "Присоединиться";
+
+    }
+
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const button = document.getElementById("joinPlanBtn");
+
+    if (!button) return;
+
+    button.addEventListener("click", toggleJoin);
+
+});
+
+async function toggleJoin() {
+
+    const {
+        data: { user }
+    } = await db.auth.getUser();
+
+    if (!user) {
+
+        alert("Необходимо войти");
+
+        return;
+
+    }
+
+    const { data } = await db
+        .from("plan_members")
+        .select("id")
+        .eq("plan_id", currentPlan.id)
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (data) {
+
+        await db
+            .from("plan_members")
+            .delete()
+            .eq("id", data.id);
+
+    } else {
+
+        await db
+            .from("plan_members")
+            .insert({
+                plan_id: currentPlan.id,
+                user_id: user.id
+            });
+
+    }
+
+    updateJoinButton();
 
 }
