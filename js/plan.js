@@ -280,3 +280,35 @@ async function updateOwnerActions() {
     }
 
 }
+document
+    .getElementById("deletePlanBtn")
+    ?.addEventListener("click", deletePlan);
+
+async function deletePlan() {
+
+    const ok = confirm(
+        "Вы действительно хотите удалить встречу?"
+    );
+
+    if (!ok) return;
+
+    const { error } = await db
+        .from("plans")
+        .delete()
+        .eq("id", currentPlan.id);
+
+    if (error) {
+
+        console.error(error);
+
+        alert("Не удалось удалить встречу");
+
+        return;
+
+    }
+
+    alert("Встреча удалена");
+
+    window.location.href = "index.html";
+
+}
