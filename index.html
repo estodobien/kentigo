@@ -297,40 +297,48 @@
 
         <form id="createPlanForm">
 
-            <input
-                type="text"
-                id="title"
-                placeholder="Название встречи"
-                required>
+            <div class="form-row">
 
-            <select id="category" required>
+    <input
+        type="text"
+        id="title"
+        placeholder="Название встречи"
+        required>
 
-                <option value="">Категория</option>
+    <select id="category" required>
 
-                <option value="coffee">☕ Кофе</option>
-                <option value="beach">🏖 Пляж</option>
-                <option value="bar">🍺 Бар</option>
-                <option value="restaurant">🍕 Ресторан</option>
-                <option value="sport">⚽ Спорт</option>
-                <option value="bike">🚴 Велосипед</option>
-                <option value="hiking">🥾 Поход</option>
-                <option value="trip">🚗 Поездка</option>
-                <option value="games">🎲 Игры</option>
-                <option value="movie">🎬 Кино</option>
-                <option value="other">✨ Другое</option>
+        <option value="">Категория</option>
 
-            </select>
+        <option value="coffee">☕ Кофе</option>
+        <option value="beach">🏖 Пляж</option>
+        <option value="bar">🍺 Бар</option>
+        <option value="restaurant">🍕 Ресторан</option>
+        <option value="sport">⚽ Спорт</option>
+        <option value="bike">🚴 Велосипед</option>
+        <option value="hiking">🥾 Поход</option>
+        <option value="trip">🚗 Поездка</option>
+        <option value="games">🎲 Игры</option>
+        <option value="movie">🎬 Кино</option>
+        <option value="other">✨ Другое</option>
 
-            <input
-                type="text"
-                id="city"
-                placeholder="Город"
-                required>
+    </select>
 
-            <input
-                type="text"
-                id="meetingPlace"
-                placeholder="Место встречи">
+</div>
+
+            <div class="form-row">
+
+    <input
+        type="text"
+        id="city"
+        placeholder="Город"
+        required>
+
+    <input
+        type="text"
+        id="meetingPlace"
+        placeholder="Место встречи">
+
+</div>
 
             <input
                 type="datetime-local"
