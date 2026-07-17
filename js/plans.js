@@ -190,3 +190,58 @@ function initButtons() {
     });
 
 }
+// ==========================================
+// СОЗДАНИЕ ВСТРЕЧИ
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const form = document.getElementById("createPlanForm");
+
+    if (!form) return;
+
+    form.addEventListener("submit", createPlan);
+
+});
+
+async function createPlan(event) {
+
+    event.preventDefault();
+
+    const form = event.target;
+
+    const plan = {
+
+        title: form.title.value.trim(),
+        category: form.category.value,
+        city: form.city.value.trim(),
+        meeting_place: form.meetingPlace.value.trim(),
+        meeting_at: form.meetingAt.value,
+        max_people: Number(form.maxPeople.value),
+        description: form.description.value.trim(),
+
+        status: "open"
+
+    };
+
+    const { error } = await db
+        .from("plans")
+        .insert(plan);
+
+    if (error) {
+
+        console.error(error);
+
+        alert("Ошибка при создании встречи");
+
+        return;
+
+    }
+
+    form.reset();
+
+    closeCreatePlanModal();
+
+    loadPlans();
+
+}
