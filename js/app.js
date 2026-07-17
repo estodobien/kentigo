@@ -9,35 +9,11 @@ function initApp() {
 
     initModal();
 
-    initButtons();
-
     console.log("Kentigo started");
 
 }
 
-// ==========================================
-// BUTTONS
-// ==========================================
 
-function initButtons() {
-
-    document
-        .querySelectorAll("[data-login]")
-        .forEach(button => {
-
-            button.addEventListener("click", openLoginModal);
-
-        });
-
-    document
-        .querySelectorAll("[data-create]")
-        .forEach(button => {
-
-            button.addEventListener("click", openCreatePlanModal);
-
-        });
-
-}
 
 // ==========================================
 // LOGIN MODAL
@@ -90,8 +66,6 @@ function closeLoginModal() {
 
 function openCreatePlanModal() {
 
-    console.log("OPEN CREATE");
-
     const modal = document.getElementById("createPlanModal");
 
     if (!modal) return;
@@ -112,18 +86,28 @@ function closeCreatePlanModal() {
 
 document.addEventListener("click", (event) => {
 
-    if (event.target.matches("[data-close-create]")) {
-
-        closeCreatePlanModal();
-
+    if (event.target.closest("[data-login]")) {
+        openLoginModal();
+        return;
     }
 
-    const modal = document.getElementById("createPlanModal");
+    if (event.target.closest("[data-create]")) {
+        openCreatePlanModal();
+        return;
+    }
 
-    if (event.target === modal) {
-
+    if (event.target.closest("[data-close-create]")) {
         closeCreatePlanModal();
+        return;
+    }
 
+    if (event.target.id === "loginModal") {
+        closeLoginModal();
+        return;
+    }
+
+    if (event.target.id === "createPlanModal") {
+        closeCreatePlanModal();
     }
 
 });
