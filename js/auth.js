@@ -1,157 +1,47 @@
-// ===============================
-// Google Login
-// ===============================
+// ==========================================
+// KENTIGO
+// AUTH
+// ==========================================
 
-const googleLoginBtn = document.getElementById("googleLogin");
+let currentUser = null;
 
-if (googleLoginBtn) {
-    googleLoginBtn.addEventListener("click", async () => {
+// ==========================================
+// INIT
+// ==========================================
 
-        try {
+document.addEventListener("DOMContentLoaded", initAuth);
 
-            const { error } = await db.auth.signInWithOAuth({
+async function initAuth() {
 
-                provider: "google",
+    const {
+        data: { session }
+    } = await db.auth.getSession();
 
-                options: {
-                    redirectTo: `${window.location.origin}/login.html`
-                }
+    currentUser = session?.user ?? null;
 
-            });
-
-            if (error) {
-                alert(error.message);
-            }
-
-        } catch (err) {
-            console.error(err);
-            alert(err.message);
-        }
-
-    });
-}
-
-// ===============================
-// Email Registration
-// ===============================
-
-const registerBtn = document.getElementById("registerBtn");
-
-if (registerBtn) {
-
-    registerBtn.addEventListener("click", async () => {
-
-        try {
-
-            const name = document.getElementById("registerName").value.trim();
-            const email = document.getElementById("registerEmail").value.trim();
-            const password = document.getElementById("registerPassword").value;
-
-            if (!name || !email || !password) {
-                alert("Заполните все поля");
-                return;
-            }
-
-            const { data, error } = await db.auth.signUp({
-
-                email,
-                password
-
-            });
-
-            if (error) {
-                alert(error.message);
-                return;
-            }
-
-            if (data.user) {
-
-                const { error: profileError } = await db
-                    .from("profiles")
-                    .update({
-                        name: name
-                    })
-                    .eq("id", data.user.id);
-
-                if (profileError) {
-                    console.error(profileError);
-                }
-
-            }
-
-            alert("Регистрация успешна. Проверьте почту.");
-
-        } catch (err) {
-
-            console.error(err);
-            alert(err.message);
-
-        }
-
-    });
+    updateHeader();
 
 }
+// ==========================================
+// HEADER
+// ==========================================
 
-// ===============================
-// Email Login
-// ===============================
+function updateHeader() {
 
-const loginBtn = document.getElementById("loginBtn");
+    const loginButton = document.querySelector("[data-login]");
 
-if (loginBtn) {
+    if (!loginButton) return;
 
-    loginBtn.addEventListener("click", async () => {
+    if (!currentUser) {
 
-        try {
+        loginButton.textContent = "Войти";
 
-            const email = document.getElementById("loginEmail").value.trim();
-            const password = document.getElementById("loginPassword").value;
-
-            const { error } = await db.auth.signInWithPassword({
-
-                email,
-                password
-
-            });
-
-            if (error) {
-                alert(error.message);
-                return;
-            }
-
-            window.location.href = "plans.html";
-
-        } catch (err) {
-
-            console.error(err);
-            alert(err.message);
-
-        }
-
-    });
-
-}
-
-// ===============================
-// Existing Session
-// ===============================
-
-(async () => {
-
-    try {
-
-        const {
-            data: { session }
-        } = await db.auth.getSession();
-
-        if (!session) return;
-
-        window.location.href = "plans.html";
-
-    } catch (err) {
-
-        console.error(err);
+        return;
 
     }
 
-})();
+    loginButton.textContent =
+        currentUser.user_metadata?.full_name ||
+        currentUser.email;
+
+}
