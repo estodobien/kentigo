@@ -36,6 +36,8 @@ function updateHeader() {
 
         loginButton.textContent = "Войти";
 
+        loginButton.dataset.login = "";
+
         return;
 
     }
@@ -43,5 +45,9 @@ function updateHeader() {
     loginButton.textContent =
         currentUser.user_metadata?.full_name ||
         currentUser.email;
+
+    delete loginButton.dataset.login;
+
+    loginButton.dataset.profile = "";
 
 }

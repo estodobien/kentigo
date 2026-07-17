@@ -90,6 +90,13 @@ document.addEventListener("click", (event) => {
         openLoginModal();
         return;
     }
+    if (event.target.closest("[data-profile]")) {
+
+    alert("Меню профиля скоро будет 🙂");
+
+    return;
+
+}
 
     if (event.target.closest("[data-create]")) {
         openCreatePlanModal();
