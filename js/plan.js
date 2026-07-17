@@ -131,13 +131,29 @@ async function updateJoinButton() {
 
     if (data) {
 
-        button.textContent = "Покинуть встречу";
+    button.textContent = "Покинуть встречу";
+    button.disabled = false;
+
+} else {
+
+    const { count } = await db
+        .from("plan_members")
+        .select("*", { count: "exact", head: true })
+        .eq("plan_id", currentPlan.id);
+
+    if (count >= currentPlan.max_people) {
+
+        button.textContent = "Мест нет";
+        button.disabled = true;
 
     } else {
 
         button.textContent = "Присоединиться";
+        button.disabled = false;
 
     }
+
+}
 
 }
 
