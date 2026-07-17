@@ -208,9 +208,23 @@ async function createPlan(event) {
 
     event.preventDefault();
 
+    const {
+        data: { user }
+    } = await db.auth.getUser();
+
+    if (!user) {
+
+        alert("Необходимо войти");
+
+        return;
+
+    }
+
     const form = event.target;
 
     const plan = {
+
+        creator_id: user.id,
 
         title: form.title.value.trim(),
         category: form.category.value,
