@@ -88,8 +88,7 @@ function renderPlan(plan) {
             minute: "2-digit"
         });
 
-    document.getElementById("participantsCount").textContent =
-        `0 / ${plan.max_people} участников`;
+    updateParticipantsCount();
 
 }
 // ==========================================
@@ -182,5 +181,17 @@ async function toggleJoin() {
     }
 
     updateJoinButton();
+    updateParticipantsCount();
+
+}
+async function updateParticipantsCount() {
+
+    const { count } = await db
+        .from("plan_members")
+        .select("*", { count: "exact", head: true })
+        .eq("plan_id", currentPlan.id);
+
+    document.getElementById("participantsCount").textContent =
+        `${count} / ${currentPlan.max_people} участников`;
 
 }
