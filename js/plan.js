@@ -36,10 +36,17 @@ async function loadPlan() {
     }
 
     const { data, error } = await db
-        .from("plans")
-        .select("*")
-        .eq("id", id)
-        .single();
+    .from("plans")
+    .select(`
+        *,
+        creator:profiles!plans_creator_id_fkey(
+            id,
+            name,
+            avatar_url
+        )
+    `)
+    .eq("id", id)
+    .single();
 
     if (error) {
 
@@ -89,6 +96,8 @@ function renderPlan(plan) {
         });
 
     updateParticipantsCount();
+    document.getElementById("planCreator").textContent =
+    plan.creator?.name || "Без имени";
 
 }
 // ==========================================
