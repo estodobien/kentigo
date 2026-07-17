@@ -37,7 +37,7 @@ async function loadPlans() {
 
     container.innerHTML = "<p>Загрузка...</p>";
 
-    const { data, error } = await supabase
+    const { data, error } = await db
         .from("plans")
         .select("*")
         .eq("status", "open")
