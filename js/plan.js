@@ -96,6 +96,7 @@ function renderPlan(plan) {
         });
 
     updateParticipantsCount();
+    updateParticipantsList();
     document.getElementById("planCreator").textContent =
     plan.creator?.name || "Без имени";
 
@@ -191,6 +192,7 @@ async function toggleJoin() {
 
     updateJoinButton();
     updateParticipantsCount();
+    updateParticipantsList();
 
 }
 async function updateParticipantsCount() {
@@ -202,5 +204,41 @@ async function updateParticipantsCount() {
 
     document.getElementById("participantsCount").textContent =
         `${count} / ${currentPlan.max_people} участников`;
+
+}
+async function updateParticipantsList() {
+
+    const list = document.getElementById("participantsList");
+
+    const { data, error } = await db
+        .from("plan_members")
+        .select(`
+            profiles (
+                name
+            )
+        `)
+        .eq("plan_id", currentPlan.id);
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+
+    }
+
+    if (!data.length) {
+
+        list.innerHTML = "<p>Пока никто не присоединился</p>";
+
+        return;
+
+    }
+
+    list.innerHTML = data.map(member => `
+        <div class="participant-item">
+            👤 ${member.profiles?.name || "Без имени"}
+        </div>
+    `).join("");
 
 }
