@@ -90,6 +90,8 @@ function closeLoginModal() {
 
 function openCreatePlanModal() {
 
+    console.log("OPEN CREATE");
+
     const modal = document.getElementById("createPlanModal");
 
     if (!modal) return;
