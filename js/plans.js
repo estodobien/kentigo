@@ -1,66 +1,43 @@
-// =========================
-// Категории
-// =========================
+// ==========================================
+// KENTIGO
+// PLANS
+// ==========================================
 
 const categories = {
-    coffee: "☕ Coffee",
-    beach: "🏖 Beach",
-    bar: "🍺 Bar",
-    restaurant: "🍕 Restaurant",
-    sport: "⚽ Sport",
-    bike: "🚴 Bike",
-    hiking: "🥾 Hiking",
-    trip: "🚗 Trip",
-    games: "🎲 Games",
-    movie: "🎬 Movie",
-    other: "✨ Other"
+    coffee: "☕ Кофе",
+    beach: "🏖 Пляж",
+    bar: "🍺 Бар",
+    restaurant: "🍕 Ресторан",
+    sport: "⚽ Спорт",
+    bike: "🚴 Велосипед",
+    hiking: "🥾 Поход",
+    trip: "🚗 Поездка",
+    games: "🎲 Игры",
+    movie: "🎬 Кино",
+    other: "✨ Другое"
 };
 
-// =========================
-// Запуск
-// =========================
+document.addEventListener("DOMContentLoaded", () => {
 
-init();
+    loadPlans();
 
-async function init() {
+    initButtons();
 
-    const user = await checkSession();
+});
 
-    document.getElementById("welcome").textContent =
-        "Привет, " + user.email;
-
-    await loadPlans();
-
-}
-
-// =========================
-// Проверка авторизации
-// =========================
-
-async function checkSession() {
-
-    const {
-        data: { session }
-    } = await db.auth.getSession();
-
-    if (!session) {
-
-        window.location.href = "login.html";
-        return;
-
-    }
-
-    return session.user;
-
-}
-
-// =========================
-// Загрузка планов
-// =========================
+// ==========================================
+// Загрузка встреч
+// ==========================================
 
 async function loadPlans() {
 
-    const { data, error } = await db
+    const container = document.getElementById("plans");
+
+    if (!container) return;
+
+    container.innerHTML = "<p>Загрузка...</p>";
+
+    const { data, error } = await supabase
         .from("plans")
         .select("*")
         .eq("status", "open")
@@ -69,6 +46,14 @@ async function loadPlans() {
     if (error) {
 
         console.error(error);
+
+        container.innerHTML = `
+            <div class="empty-state">
+                <h3>Ошибка</h3>
+                <p>Не удалось загрузить встречи.</p>
+            </div>
+        `;
+
         return;
 
     }
@@ -77,9 +62,9 @@ async function loadPlans() {
 
 }
 
-// =========================
-// Отрисовка списка
-// =========================
+// ==========================================
+// Отрисовка
+// ==========================================
 
 function renderPlans(plans) {
 
@@ -87,14 +72,19 @@ function renderPlans(plans) {
 
     container.innerHTML = "";
 
-    if (plans.length === 0) {
+    const counter = document.getElementById("plansCount");
+
+if (counter) {
+    counter.textContent = `${plans.length} встреч`;
+}
+
+    if (!plans.length) {
 
         container.innerHTML = `
-            <p>
-                Пока никто ничего не запланировал.
-                <br><br>
-                Создай первый план 😊
-            </p>
+            <div class="empty-state">
+                <h3>Пока пусто</h3>
+                <p>Стань первым, кто создаст встречу 🎉</p>
+            </div>
         `;
 
         return;
@@ -109,44 +99,71 @@ function renderPlans(plans) {
 
 }
 
-// =========================
-// Карточка
-// =========================
+// ==========================================
+// Карточка встречи
+// ==========================================
 
 function createPlanCard(plan) {
 
-    const card = document.createElement("div");
+    const card = document.createElement("article");
 
     card.className = "plan-card";
 
     const date = new Date(plan.meeting_at);
 
+    const day = date.toLocaleDateString("ru-RU");
+
+    const time = date.toLocaleTimeString("ru-RU", {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
     card.innerHTML = `
 
-        <h3>${categories[plan.category] || plan.category}</h3>
+        <div class="plan-image">
+            📍
+        </div>
 
-        <p><strong>${plan.title}</strong></p>
+        <div class="plan-content">
 
-        <p>📍 ${plan.city}</p>
+            <div class="plan-category">
+                ${categories[plan.category] ?? "✨ Другое"}
+            </div>
 
-        <p>📌 ${plan.meeting_place}</p>
+            <h3 class="plan-title">
+                ${plan.title}
+            </h3>
 
-        <p>📅 ${date.toLocaleDateString()}</p>
+            <p class="plan-description">
+                ${plan.description ?? ""}
+            </p>
 
-        <p>🕒 ${date.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit"
-        })}</p>
+            <div class="plan-info">
 
-        <p>👥 До ${plan.max_people} человек</p>
+                <div>📍 ${plan.city}</div>
 
-        <p>${plan.description ?? ""}</p>
+                <div>📌 ${plan.meeting_place ?? "Место уточняется"}</div>
 
-        <button>
-            Подробнее
-        </button>
+                <div>📅 ${day}</div>
 
-        <hr>
+                <div>🕒 ${time}</div>
+
+                <div>👥 До ${plan.max_people} участников</div>
+
+            </div>
+
+            <div class="plan-footer">
+
+                <button
+                    class="btn btn-primary"
+                    data-plan-id="${plan.id}"
+                >
+                    Подробнее
+                </button>
+
+            </div>
+
+        </div>
 
     `;
 
@@ -154,28 +171,22 @@ function createPlanCard(plan) {
 
 }
 
-// =========================
-// Выход
-// =========================
+// ==========================================
+// Кнопки
+// ==========================================
 
-document
-    .getElementById("logoutBtn")
-    .addEventListener("click", async () => {
+function initButtons() {
 
-        await db.auth.signOut();
+    document.addEventListener("click", (event) => {
 
-        window.location.href = "login.html";
+        const button = event.target.closest("[data-plan-id]");
 
-    });
+        if (!button) return;
 
-// =========================
-// Создать план
-// =========================
+        const id = button.dataset.planId;
 
-document
-    .getElementById("createPlanBtn")
-    .addEventListener("click", () => {
-
-        alert("Следующий шаг — модальное окно создания плана");
+        window.location.href = `plan.html?id=${id}`;
 
     });
+
+}

@@ -1,18 +1,310 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kentigo</title>
+
+    <title>Kentigo — Найдите компанию уже сегодня</title>
+
+    <meta name="description"
+        content="Kentigo помогает найти людей рядом с вами для спорта, прогулок, кофе, путешествий и других совместных занятий.">
 
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
 
-<h1>Kentigo MVP</h1>
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="container header-content">
+
+            <a href="index.html" class="logo">
+                Kentigo
+            </a>
+
+            <nav class="header-actions">
+
+                <button
+    class="btn btn-light"
+    data-login>
+    + Создать встречу
+</button>
+
+                <button
+    class="btn btn-primary"
+    data-login>
+    Войти
+</button>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="container hero-content">
+
+            <h1>
+                Найдите компанию уже сегодня
+            </h1>
+
+            <p>
+                Спорт, прогулки, кофе, путешествия, настольные игры и любые другие встречи рядом с вами.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+
+
+    <!-- ================= FILTERS ================= -->
+
+    <section class="filters">
+
+        <div class="container">
+
+            <div class="filters-grid">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Что хотите делать?">
+
+                <select id="cityFilter">
+
+                    <option value="">
+                        Любой город
+                    </option>
+
+                </select>
+
+                <select id="categoryFilter">
+
+                    <option value="">
+                        Все категории
+                    </option>
+
+                    <option value="coffee">
+                        ☕ Кофе
+                    </option>
+
+                    <option value="beach">
+                        🏖 Пляж
+                    </option>
+
+                    <option value="bar">
+                        🍺 Бар
+                    </option>
+
+                    <option value="restaurant">
+                        🍽 Ресторан
+                    </option>
+
+                    <option value="sport">
+                        ⚽ Спорт
+                    </option>
+
+                    <option value="bike">
+                        🚴 Велосипед
+                    </option>
+
+                    <option value="hiking">
+                        🥾 Поход
+                    </option>
+
+                    <option value="trip">
+                        🚗 Путешествие
+                    </option>
+
+                    <option value="games">
+                        🎲 Игры
+                    </option>
+
+                    <option value="movie">
+                        🎬 Кино
+                    </option>
+
+                    <option value="other">
+                        🎉 Другое
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+
+    <!-- ================= PLANS ================= -->
+
+    <main class="container">
+
+        <section class="plans-section">
+
+            <div class="section-title">
+
+                <h2>
+                    Ближайшие встречи
+                </h2>
+
+                <span id="plansCount">
+                    0 встреч
+                </span>
+
+            </div>
+
+            <div
+                id="plans"
+                class="plans-grid">
+
+                <!-- Карточки загрузятся через JS -->
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+
+
+    <!-- ================= EMPTY ================= -->
+
+    <template id="emptyState">
+
+        <div class="empty-state">
+
+            <h3>
+                Пока ничего нет
+            </h3>
+
+            <p>
+                Станьте первым человеком, который создаст встречу в вашем городе.
+            </p>
+
+            <button
+    class="btn btn-primary"
+    data-login>
+    Создать встречу
+</button>
+
+        </div>
+
+    </template>
+
+
+
+
+
+    <!-- ================= LOGIN MODAL ================= -->
+
+    <div
+        id="loginModal"
+        class="modal">
+
+        <div class="modal-content">
+
+            <button
+                class="modal-close"
+                id="closeModal">
+
+                ×
+
+            </button>
+
+            <h2>
+                Почти готово 🚀
+            </h2>
+
+            <p>
+
+                После регистрации вы сможете:
+
+            </p>
+
+            <ul>
+
+                <li>✅ Создавать встречи</li>
+
+                <li>✅ Присоединяться к другим участникам</li>
+
+                <li>✅ Общаться в чате встречи</li>
+
+            </ul>
+
+            <div class="modal-buttons">
+
+                <a
+                    href="login.html"
+                    class="btn btn-primary">
+
+                    Войти
+
+                </a>
+
+                <a
+                    href="login.html?register=1"
+                    class="btn btn-light">
+
+                    Зарегистрироваться
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer">
+
+        <div class="container">
+
+            <p>
+
+                © 2026 Kentigo
+
+            </p>
+
+        </div>
+
+    </footer>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabaseClient.js"></script>
+
+<script src="js/supabase.js"></script>
+
 <script src="js/app.js"></script>
+
+<script src="js/plans.js"></script>
+
 </body>
+
 </html>
