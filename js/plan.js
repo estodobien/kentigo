@@ -355,6 +355,9 @@ async function loadMessages() {
     }
 
     chatMessages = data;
+    const {
+    data: { user }
+} = await db.auth.getUser();
 
     if (!data.length) {
 
@@ -374,8 +377,9 @@ async function loadMessages() {
             minute: "2-digit"
         });
 
+        const isMine = message.user_id === user?.id;
     return `
-    <div class="chat-message">
+    <div class="chat-message ${isMine ? "mine" : ""}">
 
         <div class="chat-author">
             ${message.profiles?.name ?? "Без имени"}

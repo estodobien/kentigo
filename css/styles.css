@@ -1116,12 +1116,25 @@ select{
 
 .chat-message {
 
+    max-width: 75%;
+
     padding: 12px 16px;
 
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
+    border-radius: 16px;
 
-    background: #f8fafc;
+    background: #f3f4f6;
+
+    border: 1px solid #e5e7eb;
+
+}
+
+.chat-message.mine {
+
+    margin-left: auto;
+
+    background: #dbeafe;
+
+    border-color: #bfdbfe;
 
 }
 
