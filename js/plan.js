@@ -375,16 +375,22 @@ async function loadMessages() {
         });
 
     return `
-        <div class="chat-message">
+    <div class="chat-message">
 
-            <strong>${message.profiles?.name ?? "Без имени"}</strong>
-
-            <div>${message.message}</div>
-
-            <small>${time}</small>
-
+        <div class="chat-author">
+            ${message.profiles?.name ?? "Без имени"}
         </div>
-    `;
+
+        <div class="chat-text">
+            ${message.message}
+        </div>
+
+        <div class="chat-time">
+            ${time}
+        </div>
+
+    </div>
+`;
 
 }).join("");
 
