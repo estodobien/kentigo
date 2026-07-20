@@ -366,15 +366,27 @@ async function loadMessages() {
 
     }
 
-    container.innerHTML = data.map(message => `
+    container.innerHTML = data.map(message => {
+
+    const time = new Date(message.created_at)
+        .toLocaleTimeString("ru-RU", {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+
+    return `
         <div class="chat-message">
 
             <strong>${message.profiles?.name ?? "Без имени"}</strong>
 
             <div>${message.message}</div>
 
+            <small>${time}</small>
+
         </div>
-    `).join("");
+    `;
+
+}).join("");
 
 }
 // ==========================================
