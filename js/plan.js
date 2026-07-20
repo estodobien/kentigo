@@ -17,6 +17,7 @@ const categories = {
     other: "✨ Другое"
 };
 let currentPlan = null;
+let chatMessages = [];
 document.addEventListener("DOMContentLoaded", loadPlan);
 
 async function loadPlan() {
@@ -61,6 +62,8 @@ async function loadPlan() {
     currentPlan = data;
 
 renderPlan(data);
+
+await loadMessages();
 
 updateJoinButton();
 
@@ -310,5 +313,57 @@ async function deletePlan() {
     alert("Встреча удалена");
 
     window.location.href = "index.html";
+
+}
+// ==========================================
+// CHAT
+// ==========================================
+
+async function loadMessages() {
+
+    const container = document.getElementById("chatMessages");
+
+    if (!container) return;
+
+    const { data, error } = await db
+        .from("plan_messages")
+        .select(`
+            *,
+            profiles (
+                name
+            )
+        `)
+        .eq("plan_id", currentPlan.id)
+        .order("created_at", { ascending: true });
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+
+    }
+
+    chatMessages = data;
+
+    if (!data.length) {
+
+        container.innerHTML = `
+            <p>Пока нет сообщений</p>
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML = data.map(message => `
+        <div class="chat-message">
+
+            <strong>${message.profiles?.name ?? "Без имени"}</strong>
+
+            <div>${message.message}</div>
+
+        </div>
+    `).join("");
 
 }
