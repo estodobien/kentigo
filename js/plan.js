@@ -163,11 +163,21 @@ async function updateJoinButton() {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    const button = document.getElementById("joinPlanBtn");
+    const joinButton = document.getElementById("joinPlanBtn");
 
-    if (!button) return;
+    if (joinButton) {
 
-    button.addEventListener("click", toggleJoin);
+        joinButton.addEventListener("click", toggleJoin);
+
+    }
+
+    const sendButton = document.getElementById("sendMessageBtn");
+
+    if (sendButton) {
+
+        sendButton.addEventListener("click", sendMessage);
+
+    }
 
 });
 
@@ -365,5 +375,54 @@ async function loadMessages() {
 
         </div>
     `).join("");
+
+}
+// ==========================================
+// SEND MESSAGE
+// ==========================================
+
+async function sendMessage() {
+
+    const input = document.getElementById("chatMessageInput");
+
+    if (!input) return;
+
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    const {
+        data: { user }
+    } = await db.auth.getUser();
+
+    if (!user) {
+
+        alert("Необходимо войти");
+
+        return;
+
+    }
+
+    const { error } = await db
+        .from("plan_messages")
+        .insert({
+            plan_id: currentPlan.id,
+            user_id: user.id,
+            message: message
+        });
+
+    if (error) {
+
+        console.error(error);
+
+        alert("Не удалось отправить сообщение");
+
+        return;
+
+    }
+
+    input.value = "";
+
+    await loadMessages();
 
 }
